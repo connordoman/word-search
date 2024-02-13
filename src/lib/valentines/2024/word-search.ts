@@ -28,9 +28,12 @@ export interface WordSearchState {
     height: number;
     randomLetters: string[][];
     wordPlacements: WordPlacements;
+    foundWords: string[];
 }
 
 type WordPlacementAttempt = WordSearchState | false;
+
+export type WordSearchGuess = WordPlacementCoords[];
 
 export abstract class WordSearch {
     static createGame(words?: string[], width?: number, height?: number): WordSearchState {
@@ -47,6 +50,7 @@ export abstract class WordSearch {
             height: h,
             randomLetters,
             wordPlacements: {},
+            foundWords: [],
         };
 
         game = WordSearch.placeWords(game);
@@ -56,6 +60,36 @@ export abstract class WordSearch {
 
     static createEmptyBoard(width: number, height: number): string[][] {
         return Array.from({ length: height }, () => Array.from({ length: width }, () => "_"));
+    }
+
+    static guess(state: WordSearchState, letters: WordSearchGuess): WordSearchState | false {
+        const { words, wordPlacements, foundWords } = state;
+
+        const compareGuess = (guess: WordSearchGuess, placement: WordPlacementCoords[]): boolean => {
+            return (
+                guess.length === placement.length &&
+                guess.every((coord, i) => coord.row === placement[i].row && coord.col === placement[i].col)
+            );
+        };
+
+        for (let word of words) {
+            if (word in wordPlacements) {
+                if (!compareGuess(letters, wordPlacements[word])) {
+                    continue;
+                }
+
+                if (foundWords.includes(word)) {
+                    console.log(`Word already found: ${word}`);
+                    return state;
+                }
+
+                console.log(`Found word: ${word}`);
+                const newFoundWords = [...foundWords, word];
+                return { ...state, foundWords: newFoundWords };
+            }
+        }
+
+        return false;
     }
 
     static placeWordAt(

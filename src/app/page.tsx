@@ -11,10 +11,10 @@ export default async function Home() {
     // const words = WordSearch.randomWordList(12);
 
     return (
-        <div>
+        <main className="flex items-start justify-center">
             <WordSearchGameProvider>
                 <WordSearchGame />
             </WordSearchGameProvider>
-        </div>
+        </main>
     );
 }

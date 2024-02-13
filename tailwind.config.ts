@@ -20,6 +20,7 @@ const config: Config = {
                 "word-light-grey": "#d3d6da",
                 "word-grey": "#818384",
                 "word-dark-grey": "#3a3a3c",
+                "word-button-active": "#1d1d1e",
             },
         },
     },
