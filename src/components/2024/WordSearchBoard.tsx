@@ -6,21 +6,33 @@
 
 import { useEffect, useState } from "react";
 import { LetterButton } from "./LetterButton";
-import { WordSearchGuess } from "@/lib/valentines/2024/word-search";
+import { WordPlacementCoords, WordPlacements, WordSearchGuess } from "@/lib/valentines/2024/word-search";
 
 interface WordSearchBoardProps {
     w: number;
     h: number;
     letters: string[];
     currentGuess: WordSearchGuess;
+    correctGuesses: WordPlacementCoords[];
     onClickLetter: (row: number, col: number) => void;
 }
 
-export const WordSearchBoard = ({ w, h, currentGuess, letters, onClickLetter }: WordSearchBoardProps) => {
+export const WordSearchBoard = ({
+    w,
+    h,
+    currentGuess,
+    letters,
+    correctGuesses,
+    onClickLetter,
+}: WordSearchBoardProps) => {
     const [buttonLetters, setButtonLetters] = useState(letters);
 
     const checkSelected = (row: number, col: number): boolean => {
         return currentGuess.some((coords) => coords.row === row && coords.col === col);
+    };
+
+    const checkCorrect = (row: number, col: number): boolean => {
+        return correctGuesses.some((coords) => coords.row === row && coords.col === col);
     };
 
     const buttons = buttonLetters.map((letter, i) => {
@@ -33,6 +45,7 @@ export const WordSearchBoard = ({ w, h, currentGuess, letters, onClickLetter }: 
                 row={row}
                 col={col}
                 selected={checkSelected(row, col)}
+                correct={checkCorrect(row, col)}
                 onClickLetter={onClickLetter}
             />
         );

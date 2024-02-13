@@ -55,6 +55,8 @@ export abstract class WordSearch {
 
         game = WordSearch.placeWords(game);
 
+        console.table(game.wordPlacements);
+
         return game;
     }
 
@@ -132,6 +134,8 @@ export abstract class WordSearch {
 
         let newState = { ...state };
 
+        let failedWords: string[] = [];
+
         words.forEach((word) => {
             console.log(`Placing word: ${word}...`);
             let attempts = 0;
@@ -151,6 +155,7 @@ export abstract class WordSearch {
                 }
                 if (attempts > maxAttempts) {
                     console.error(`Failed to place word: ${word}`);
+                    failedWords.push(word);
                     break;
                 }
                 attempts++;
@@ -161,6 +166,8 @@ export abstract class WordSearch {
                 newState = { ...placed };
             }
         });
+
+        newState.words = newState.words.filter((word) => !failedWords.includes(word));
 
         return newState;
     }

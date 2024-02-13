@@ -5,7 +5,7 @@
 "use client";
 
 import { RootState } from "@/lib/valentines/2024/store";
-import { WordSearch, WordSearchGuess } from "@/lib/valentines/2024/word-search";
+import { WordPlacementCoords, WordPlacements, WordSearch, WordSearchGuess } from "@/lib/valentines/2024/word-search";
 import { setGame } from "@/lib/valentines/2024/word-search-slice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +20,7 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
     const game = useSelector((state: RootState) => state.wordSearch.game);
 
     const [currentGuess, setCurrentGuess] = useState<WordSearchGuess>([]);
+    const [correctWords, setCorrectWords] = useState<WordPlacementCoords[]>([]);
 
     useEffect(() => {
         if (!game) {
@@ -35,8 +36,9 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
 
             dispatch(setGame(correct));
             setCurrentGuess([]);
+            setCorrectWords([...correctWords, ...currentGuess]);
         }
-    }, [game, currentGuess, dispatch]);
+    }, [game, currentGuess, dispatch, correctWords]);
 
     const handleLetterClick = (row: number, col: number): void => {
         console.log(`Clicked letter at ${row}, ${col} (${game?.board[row][col]})`);
@@ -61,6 +63,7 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
                     h={game.height}
                     letters={WordSearch.flattenBoard(game)}
                     currentGuess={currentGuess}
+                    correctGuesses={correctWords}
                     onClickLetter={handleLetterClick}
                 />
                 <div className="flex md:flex-col gap-4 md:gap-2 flex-wrap justify-center p-4">
