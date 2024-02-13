@@ -62,8 +62,6 @@ export abstract class WordSearch {
 
         game = WordSearch.placeWords(game);
 
-        console.table(game.wordPlacements);
-
         return game;
     }
 

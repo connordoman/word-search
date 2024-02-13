@@ -10,6 +10,7 @@ import { setGame } from "@/lib/valentines/2024/word-search-slice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { WordSearchBoard } from "./WordSearchBoard";
+import { twMerge } from "tailwind-merge";
 
 interface WordSearchGameProps {
     words?: string[];
@@ -41,7 +42,6 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
     }, [game, currentGuess, dispatch, correctWords]);
 
     const handleLetterClick = (row: number, col: number): void => {
-        console.log(`Clicked letter at ${row}, ${col} (${game?.board[row][col]})`);
         if (currentGuess.some((coords) => coords.row === row && coords.col === col)) {
             return;
         }
@@ -70,9 +70,14 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
                     onClickLetter={handleLetterClick}
                 />
                 <div className="flex md:flex-col gap-4 md:gap-2 flex-wrap justify-center p-4">
-                    {game.words.map((word, i) => (
-                        <span key={i + "_" + word}>{word}</span>
-                    ))}
+                    {game.words.map((word, i) => {
+                        const found = game.foundWords.includes(word);
+                        return (
+                            <span className={twMerge(found ? "line-through" : "")} key={i + "_" + word}>
+                                {word}
+                            </span>
+                        );
+                    })}
                 </div>
             </div>
             <button
