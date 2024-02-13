@@ -5,6 +5,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { LetterButton } from "./LetterButton";
 
 interface WordSearchBoardProps {
     w: number;
@@ -24,16 +25,15 @@ export const WordSearchBoard = ({ w, h, letters, onClickLetter }: WordSearchBoar
         const row = Math.floor(i / w);
         const col = i % w;
         return (
-            <button
-                key={i + letter}
-                className="text-3xl"
-                onClick={() => {
-                    onClickLetter(row, col);
-                }}>
-                {letter}
-            </button>
+            <LetterButton
+                key={`${row}_${col}_${letter}`}
+                letter={letter}
+                row={row}
+                col={col}
+                onClickLetter={onClickLetter}
+            />
         );
     });
 
-    return <div>{buttons}</div>;
+    return <div className="grid grid-cols-12 w-fit-square aspect-square gap-1">{buttons}</div>;
 };

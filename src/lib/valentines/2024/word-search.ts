@@ -254,4 +254,8 @@ export abstract class WordSearch {
             Array.from({ length: width }).map((_) => alphabet[Math.floor(Math.random() * alphabet.length)])
         );
     }
+
+    static flattenBoard(state: WordSearchState): string[] {
+        return WordSearch.getBoardWithRandomLetters(state).flat();
+    }
 }
