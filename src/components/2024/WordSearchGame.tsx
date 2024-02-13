@@ -72,6 +72,11 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
                     ))}
                 </div>
             </div>
+            <button
+                className="p-2 rounded bg-word-light-grey dark:bg-word-dark-grey text-word-dark-grey dark:text-word-light-grey"
+                onClick={clearGuess}>
+                Clear
+            </button>
         </div>
     );
 };
