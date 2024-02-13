@@ -58,9 +58,9 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
     }
 
     return (
-        <div className="text-word-dark-grey dark:text-word-light-grey relative flex flex-col items-center justify-between gap-6 w-fit-square">
-            <h1 className="text-6xl m-4">Word Search</h1>
-            <div className="flex flex-col md:flex-row items-center justify-center md:items-center md:justify-between">
+        <div className="text-word-dark-grey dark:text-word-light-grey relative flex flex-col items-center justify-between gap-6 w-fit-square pt-6 pb-8">
+            <h1 className="text-4xl leading-none">Word Search</h1>
+            <div className="relative flex flex-col md:flex-row items-center justify-center md:items-center md:justify-between">
                 <WordSearchBoard
                     w={game.width}
                     h={game.height}
@@ -69,7 +69,7 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
                     correctGuesses={correctWords}
                     onClickLetter={handleLetterClick}
                 />
-                <div className="flex md:flex-col gap-4 md:gap-2 flex-wrap justify-center p-4">
+                <div className="md:absolute left-full flex flex-row md:flex-col gap-2 md:gap-2 flex-wrap justify-center p-4 leading-none">
                     {game.words.map((word, i) => {
                         const found = game.foundWords.includes(word);
                         return (
