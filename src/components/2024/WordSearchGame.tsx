@@ -42,6 +42,9 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
 
     const handleLetterClick = (row: number, col: number): void => {
         console.log(`Clicked letter at ${row}, ${col} (${game?.board[row][col]})`);
+        if (currentGuess.some((coords) => coords.row === row && coords.col === col)) {
+            return;
+        }
         const newGuess = [...currentGuess, { row, col }];
         setCurrentGuess(newGuess);
     };
@@ -73,9 +76,9 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
                 </div>
             </div>
             <button
-                className="p-2 rounded bg-word-light-grey dark:bg-word-dark-grey text-word-dark-grey dark:text-word-light-grey"
+                className="py-2 px-4 rounded-full bg-word-light-grey dark:bg-word-dark-grey text-word-dark-grey dark:text-word-light-grey"
                 onClick={clearGuess}>
-                Clear
+                Deselect
             </button>
         </div>
     );

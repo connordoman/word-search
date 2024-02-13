@@ -35,6 +35,13 @@ type WordPlacementAttempt = WordSearchState | false;
 
 export type WordSearchGuess = WordPlacementCoords[];
 
+function sortPlacementCoords(a: WordPlacementCoords, b: WordPlacementCoords): number {
+    if (a.row === b.row) {
+        return a.col - b.col;
+    }
+    return a.row - b.row;
+}
+
 export abstract class WordSearch {
     static createGame(words?: string[], width?: number, height?: number): WordSearchState {
         const w = width || WIDTH;
@@ -66,6 +73,8 @@ export abstract class WordSearch {
 
     static guess(state: WordSearchState, letters: WordSearchGuess): WordSearchState | false {
         const { words, wordPlacements, foundWords } = state;
+
+        letters = letters.sort(sortPlacementCoords);
 
         const compareGuess = (guess: WordSearchGuess, placement: WordPlacementCoords[]): boolean => {
             return (
@@ -123,6 +132,8 @@ export abstract class WordSearch {
             wordPlacements[word].push({ row: r, col: c });
             board[r][c] = wordCandidate[i];
         }
+
+        wordPlacements[word] = wordPlacements[word].sort(sortPlacementCoords);
 
         return { ...state, board, wordPlacements };
     }
