@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { WordSearchBoard } from "./WordSearchBoard";
 import { twMerge } from "tailwind-merge";
 import { WordSearchButton } from "./WordSearchButton";
+import { WordSearchLegend } from "./WordSearchLegend";
 
 interface WordSearchGameProps {
     words?: string[];
@@ -31,7 +32,7 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
     }, [game, dispatch, words]);
 
     useEffect(() => {
-        if (game && currentGuess.length > 3) {
+        if (game && currentGuess.length > 0) {
             const correct = WordSearch.guess(game, currentGuess);
 
             if (!correct) return;
@@ -73,16 +74,7 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
                     answers={WordSearch.flattenPlacements(game)}
                     onClickLetter={handleLetterClick}
                 />
-                <div className="md:absolute left-full flex flex-row md:flex-col gap-2 md:gap-2 flex-wrap justify-center p-4 leading-none">
-                    {game.words.map((word, i) => {
-                        const found = game.foundWords.includes(word);
-                        return (
-                            <span className={twMerge(found ? "line-through" : "")} key={i + "_" + word}>
-                                {word}
-                            </span>
-                        );
-                    })}
-                </div>
+                <WordSearchLegend words={game.words} foundWords={game.foundWords} />
             </div>
             <WordSearchButton onClick={clearGuess} disabled={currentGuess.length === 0}>
                 Deselect

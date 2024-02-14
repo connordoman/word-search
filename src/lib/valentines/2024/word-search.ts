@@ -68,7 +68,7 @@ export abstract class WordSearch {
         };
 
         game = WordSearch.placeWords(game);
-        WordSearch.printBoard(game, false, false, false, false);
+        WordSearch.printBoard(game, false, DEFAULT_FILL_WITH_RANDOM_LETTERS, false, false);
 
         return game;
     }
