@@ -11,7 +11,13 @@ export const HEIGHT = 12;
 export const NUMBER_OF_WORDS = 20;
 export const PLACEHOLDER = "_";
 export const DEFAULT_FILL_WITH_RANDOM_LETTERS = true;
-export const WORDSEARCH_DEBUG = true;
+export const WORDSEARCH_DEBUG = false;
+
+function debug(...args: any[]) {
+    if (WORDSEARCH_DEBUG) {
+        console.log(...args);
+    }
+}
 
 export interface WordPlacementCoords {
     row: number;
@@ -203,7 +209,7 @@ export abstract class WordSearch {
             // }
 
             if (!this.checkLetterPlacement(lettersToCheck[i], board, row, col + i)) {
-                console.log("Failed to place word horizontally");
+                debug("Failed to place word horizontally");
                 return false;
             }
         }
@@ -221,14 +227,14 @@ export abstract class WordSearch {
         const col = Math.floor(Math.random() * width);
         for (let i = 0; i < word.length; i++) {
             // if (cell !== PLACEHOLDER && cell !== lettersToCheck[i]) {
-            //     // console.log(`Cell: ${cell}, Letter: ${lettersToCheck[i]} -> not allowed`);
+            //     // debug(`Cell: ${cell}, Letter: ${lettersToCheck[i]} -> not allowed`);
             //     return false; // Word overlaps incorrectly
             // }
             // if (cell !== PLACEHOLDER) {
 
             // }
             if (!this.checkLetterPlacement(lettersToCheck[i], board, row + i, col)) {
-                console.log("Failed to place word vertically");
+                debug("Failed to place word vertically");
                 return false;
             }
         }
@@ -266,7 +272,7 @@ export abstract class WordSearch {
             // }
 
             if (!this.checkLetterPlacement(lettersToCheck[i], board, r, c)) {
-                console.log("Failed to place word diagonally " + (direction ? "up" : "down"));
+                debug("Failed to place word diagonally " + (direction ? "up" : "down"));
                 return false;
             }
         }
@@ -361,10 +367,10 @@ export abstract class WordSearch {
     static checkLetterPlacement(letter: string, board: string[][], row: number, col: number) {
         const cell = board[row][col];
         if (cell === letter || cell === PLACEHOLDER) {
-            if (cell !== PLACEHOLDER) console.log(`Allowed: Cell: ${cell} (${col},${row}), Letter: ${letter}`);
+            if (cell !== PLACEHOLDER) debug(`Allowed: Cell: ${cell} (${col},${row}), Letter: ${letter}`);
             return true;
         }
-        console.log(`Cell: ${cell} (${col},${row}), Letter: ${letter} -> not allowed`);
+        debug(`Cell: ${cell} (${col},${row}), Letter: ${letter} -> not allowed`);
 
         return false;
     }
