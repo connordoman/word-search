@@ -20,7 +20,7 @@ export const LetterButton = ({ row, col, letter, selected, correct, isAnswer, on
     return (
         <button
             className={twMerge(
-                "transition-colors duration-200 text-xl border border-transparent aspect-square text-word-dark-grey dark:text-word-light-grey bg-word-light-grey dark:bg-word-dark-grey rounded active:text-word-grey active:bg-word-dark-grey dark:active:bg-word-button-active shadow",
+                "transition-colors duration-200 text-xl font-light border border-transparent aspect-square text-word-dark-grey dark:text-word-light-grey bg-word-light-grey dark:bg-word-dark-grey rounded active:text-word-grey active:bg-word-dark-grey dark:active:bg-word-button-active shadow",
                 selected ? "border-word-dark-grey dark:border-word-light-grey" : "",
                 WORDSEARCH_DEBUG && isAnswer ? "bg-yellow-500 text-black dark:bg-yellow-500 dark:text-black" : "",
                 correct ? "bg-green-700 text-white dark:bg-green-900 dark:text-word-light-grey" : ""

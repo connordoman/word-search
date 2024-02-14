@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { WordSearchBoard } from "./WordSearchBoard";
 import { twMerge } from "tailwind-merge";
+import { WordSearchButton } from "./WordSearchButton";
 
 interface WordSearchGameProps {
     words?: string[];
@@ -83,11 +84,9 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
                     })}
                 </div>
             </div>
-            <button
-                className="py-2 px-4 rounded-full bg-word-light-grey dark:bg-word-dark-grey text-word-dark-grey dark:text-word-light-grey"
-                onClick={clearGuess}>
+            <WordSearchButton onClick={clearGuess} disabled={currentGuess.length === 0}>
                 Deselect
-            </button>
+            </WordSearchButton>
         </div>
     );
 };

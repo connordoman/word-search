@@ -23,3 +23,15 @@ export function searchParamsToQueryString(
     }
     return "";
 }
+
+export function stringArrayToQueryString(key: string, arr: string[]): string {
+    if (!arr || arr.length === 0) return "";
+
+    let params = new URLSearchParams();
+
+    for (let val of arr) {
+        params.append(key, val);
+    }
+
+    return "?" + params.toString();
+}
