@@ -13,14 +13,14 @@ export default async function Home({
     params: { slug: string };
     searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-    let words = searchParams?.words as string[];
+    const words = searchParams?.words as string[] | undefined;
 
     console.log("Custom words:", words);
 
     return (
         <main className="relative flex items-start justify-center">
             <WordSearchGameProvider>
-                <WordSearchGame />
+                <WordSearchGame words={words} />
             </WordSearchGameProvider>
         </main>
     );
