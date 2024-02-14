@@ -54,7 +54,7 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
     };
 
     if (!game) {
-        return <div>Loading...</div>;
+        return <div className="relative h-2/3 flex flex-col justify-center">Loading...</div>;
     }
 
     return (
@@ -67,6 +67,7 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
                     letters={WordSearch.flattenBoard(game)}
                     currentGuess={currentGuess}
                     correctGuesses={correctWords}
+                    answers={WordSearch.flattenPlacements(game)}
                     onClickLetter={handleLetterClick}
                 />
                 <div className="md:absolute left-full flex flex-row md:flex-col gap-2 md:gap-2 flex-wrap justify-center p-4 leading-none">

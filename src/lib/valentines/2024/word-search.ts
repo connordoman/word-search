@@ -106,7 +106,8 @@ export abstract class WordSearch {
         row: number,
         col: number,
         word: string,
-        direction: string
+        direction: "horizontal" | "vertical" | "diagonal",
+        diagonalDirection: 0 | 1 = 0
     ): WordSearchState {
         const { board, wordPlacements } = state;
 
@@ -123,8 +124,9 @@ export abstract class WordSearch {
             if (direction === "vertical") r = row + i;
 
             if (direction === "diagonal") {
+                const offset = diagonalDirection ? word.length - i : i;
                 r = row + i;
-                c = col + i;
+                c = col + offset;
             }
 
             wordPlacements[word].push({ row: r, col: c });
@@ -212,6 +214,8 @@ export abstract class WordSearch {
     static placeWordDiagonally(state: WordSearchState, word: string): WordPlacementAttempt {
         const { width, height, board, wordPlacements } = state;
 
+        const direction = Math.random() > 0.5 ? 1 : 0; // 0 for up, 1 for down
+
         const maxStartRow = height - word.length;
         const maxStartCol = width - word.length;
         if (maxStartRow < 0 || maxStartCol < 0) return false; // Word too long to fit diagonally
@@ -219,9 +223,15 @@ export abstract class WordSearch {
         const row = Math.floor(Math.random() * (maxStartRow + 1));
         const col = Math.floor(Math.random() * (maxStartCol + 1));
 
+        // diagonal up means you reflect on the x-axis and offset by the word length
+
         // Check if the word fits without incorrect overlap
         for (let i = 0; i < word.length; i++) {
-            if (board[row + i][col + i] !== "_" && board[row + i][col + i] !== word[i]) {
+            const offset = direction ? word.length - i : i;
+            const r = row + i;
+            const c = col + offset;
+
+            if (board[r][c] !== "_" && board[r][c] !== word[i]) {
                 return false; // Word overlaps incorrectly
             }
         }
@@ -307,5 +317,9 @@ export abstract class WordSearch {
 
     static flattenBoard(state: WordSearchState): string[] {
         return WordSearch.getBoardWithRandomLetters(state).flat();
+    }
+
+    static flattenPlacements(state: WordSearchState): WordPlacementCoords[] {
+        return Object.values(state.wordPlacements).flat();
     }
 }

@@ -22,6 +22,15 @@ const config: Config = {
                 "word-dark-grey": "#3a3a3c",
                 "word-button-active": "#1d1d1e",
             },
+            animation: {
+                "fade-in": "fadeIn 0.5s ease-in-out forwards",
+            },
+            keyframes: {
+                fadeIn: {
+                    "0%": { opacity: "0" },
+                    "100%": { opacity: "1" },
+                },
+            },
         },
     },
     plugins: [],
