@@ -43,6 +43,8 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
 
     const handleLetterClick = (row: number, col: number): void => {
         if (currentGuess.some((coords) => coords.row === row && coords.col === col)) {
+            const newGuess = currentGuess.filter((coords) => coords.row !== row || coords.col !== col);
+            setCurrentGuess(newGuess);
             return;
         }
         const newGuess = [...currentGuess, { row, col }];
