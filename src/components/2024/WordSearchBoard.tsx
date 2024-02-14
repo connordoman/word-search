@@ -14,6 +14,7 @@ interface WordSearchBoardProps {
     letters: string[];
     currentGuess: WordSearchGuess;
     correctGuesses: WordPlacementCoords[];
+    answers: WordPlacementCoords[];
     onClickLetter: (row: number, col: number) => void;
 }
 
@@ -23,6 +24,7 @@ export const WordSearchBoard = ({
     currentGuess,
     letters,
     correctGuesses,
+    answers,
     onClickLetter,
 }: WordSearchBoardProps) => {
     const [buttonLetters, setButtonLetters] = useState(letters);
@@ -33,6 +35,10 @@ export const WordSearchBoard = ({
 
     const checkCorrect = (row: number, col: number): boolean => {
         return correctGuesses.some((coords) => coords.row === row && coords.col === col);
+    };
+
+    const checkAnswer = (row: number, col: number): boolean => {
+        return answers.some((answer) => answer.row === row && answer.col === col);
     };
 
     const buttons = buttonLetters.map((letter, i) => {
@@ -46,6 +52,7 @@ export const WordSearchBoard = ({
                 col={col}
                 selected={checkSelected(row, col)}
                 correct={checkCorrect(row, col)}
+                isAnswer={checkAnswer(row, col)}
                 onClickLetter={onClickLetter}
             />
         );
