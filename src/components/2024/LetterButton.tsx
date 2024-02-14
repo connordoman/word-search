@@ -3,7 +3,7 @@
  * Author: Connor Doman
  */
 
-import { WORDSEARCH_DEBUG } from "@/app/2024/page";
+import { WORDSEARCH_DEBUG } from "@/lib/valentines/2024/word-search";
 import { twMerge } from "tailwind-merge";
 
 interface LetterButtonProps {

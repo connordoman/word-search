@@ -11,6 +11,7 @@ export const HEIGHT = 12;
 export const NUMBER_OF_WORDS = 20;
 export const PLACEHOLDER = "_";
 export const DEFAULT_FILL_WITH_RANDOM_LETTERS = true;
+export const WORDSEARCH_DEBUG = true;
 
 export interface WordPlacementCoords {
     row: number;
@@ -61,6 +62,7 @@ export abstract class WordSearch {
         };
 
         game = WordSearch.placeWords(game);
+        WordSearch.printBoard(game, false, false, false, false);
 
         return game;
     }
@@ -106,6 +108,7 @@ export abstract class WordSearch {
         row: number,
         col: number,
         word: string,
+        reversed: boolean,
         direction: "horizontal" | "vertical" | "diagonal",
         diagonalDirection: 0 | 1 = 0
     ): WordSearchState {
@@ -114,7 +117,7 @@ export abstract class WordSearch {
         wordPlacements[word] = wordPlacements[word] || [];
 
         // Random chance to reverse the word
-        const wordCandidate = Math.random() > 0.3 ? word : word.split("").reverse().join("");
+        const wordCandidate = reversed ? word.split("").reverse().join("") : word;
 
         for (let i = 0; i < wordCandidate.length; i++) {
             let r = row;
@@ -124,7 +127,7 @@ export abstract class WordSearch {
             if (direction === "vertical") r = row + i;
 
             if (direction === "diagonal") {
-                const offset = diagonalDirection ? word.length - i : i;
+                const offset = diagonalDirection ? word.length - i - 1 : i;
                 r = row + i;
                 c = col + offset;
             }
@@ -149,19 +152,22 @@ export abstract class WordSearch {
 
         words.forEach((word) => {
             console.log(`Placing word: ${word}...`);
+            const isReversed = Math.random() > 0.3;
             let attempts = 0;
             let placed: WordSearchState | false = false;
             while (!placed) {
-                const direction = Math.floor(Math.random() * 3); // Now 0, 1, or 2 for horizontal, vertical, or diagonal
+                const direction: number = Math.floor(Math.random() * 3); // Now 0, 1, or 2 for horizontal, vertical, or diagonal
+                // const direction: number = 2;
+
                 switch (direction) {
                     case 0:
-                        placed = this.placeWordHorizontally(newState, word);
+                        placed = this.placeWordHorizontally(newState, word, isReversed);
                         break;
                     case 1:
-                        placed = this.placeWordVertically(newState, word);
+                        placed = this.placeWordVertically(newState, word, isReversed);
                         break;
                     case 2:
-                        placed = this.placeWordDiagonally(newState, word);
+                        placed = this.placeWordDiagonally(newState, word, isReversed);
                         break;
                 }
                 if (attempts > maxAttempts) {
@@ -183,38 +189,62 @@ export abstract class WordSearch {
         return newState;
     }
 
-    static placeWordHorizontally(state: WordSearchState, word: string): WordPlacementAttempt {
+    static placeWordHorizontally(state: WordSearchState, word: string, reversed: boolean): WordPlacementAttempt {
         const { width, height, board, wordPlacements } = state;
+
+        // preempt the word placement with a check for overlap
+        const lettersToCheck = reversed ? word.split("").reverse() : word.split("");
 
         const row = Math.floor(Math.random() * height);
         const col = Math.floor(Math.random() * (width - word.length));
         for (let i = 0; i < word.length; i++) {
-            if (board[row][col + i] !== "_" && board[row][col + i] !== word[i]) {
-                return false; // Word overlaps incorrectly
+            // if (board[row][col + i] !== PLACEHOLDER && board[row][col + i] !== lettersToCheck[i]) {
+            //     return false; // Word overlaps incorrectly
+            // }
+
+            if (!this.checkLetterPlacement(lettersToCheck[i], board, row, col + i)) {
+                console.log("Failed to place word horizontally");
+                return false;
             }
         }
         // Place the word
-        return WordSearch.placeWordAt(state, row, col, word, "horizontal");
+        return WordSearch.placeWordAt(state, row, col, word, reversed, "horizontal");
     }
 
-    static placeWordVertically(state: WordSearchState, word: string): WordPlacementAttempt {
+    static placeWordVertically(state: WordSearchState, word: string, reversed: boolean): WordPlacementAttempt {
         const { width, height, board, wordPlacements } = state;
+
+        // preempt the word placement with a check for overlap
+        const lettersToCheck = reversed ? word.split("").reverse() : word.split("");
 
         const row = Math.floor(Math.random() * (height - word.length));
         const col = Math.floor(Math.random() * width);
         for (let i = 0; i < word.length; i++) {
-            if (board[row + i][col] !== PLACEHOLDER && board[row + i][col] !== word[i]) {
-                return false; // Word overlaps incorrectly
+            // if (cell !== PLACEHOLDER && cell !== lettersToCheck[i]) {
+            //     // console.log(`Cell: ${cell}, Letter: ${lettersToCheck[i]} -> not allowed`);
+            //     return false; // Word overlaps incorrectly
+            // }
+            // if (cell !== PLACEHOLDER) {
+
+            // }
+            if (!this.checkLetterPlacement(lettersToCheck[i], board, row + i, col)) {
+                console.log("Failed to place word vertically");
+                return false;
             }
         }
         // Place the word
-        return WordSearch.placeWordAt(state, row, col, word, "vertical");
+        return WordSearch.placeWordAt(state, row, col, word, reversed, "vertical");
     }
 
-    static placeWordDiagonally(state: WordSearchState, word: string): WordPlacementAttempt {
+    static placeWordDiagonally(state: WordSearchState, word: string, reversed: boolean): WordPlacementAttempt {
         const { width, height, board, wordPlacements } = state;
 
-        const direction = Math.random() > 0.5 ? 1 : 0; // 0 for up, 1 for down
+        // preempt the word placement with a check for overlap
+        const lettersToCheck = reversed ? word.split("").reverse() : word.split("");
+
+        // diagonal direction
+        const direction = Math.random() > 0.5 ? 1 : 0; // 0 for down, 1 for up
+        // const direction: 0 | 1 = 1;
 
         const maxStartRow = height - word.length;
         const maxStartCol = width - word.length;
@@ -227,17 +257,22 @@ export abstract class WordSearch {
 
         // Check if the word fits without incorrect overlap
         for (let i = 0; i < word.length; i++) {
-            const offset = direction ? word.length - i : i;
+            const offset = direction ? word.length - i - 1 : i;
             const r = row + i;
             const c = col + offset;
 
-            if (board[r][c] !== "_" && board[r][c] !== word[i]) {
-                return false; // Word overlaps incorrectly
+            // if (board[r][c] !== PLACEHOLDER && board[r][c] !== lettersToCheck[i]) {
+            //     return false; // Word overlaps incorrectly
+            // }
+
+            if (!this.checkLetterPlacement(lettersToCheck[i], board, r, c)) {
+                console.log("Failed to place word diagonally " + (direction ? "up" : "down"));
+                return false;
             }
         }
 
         // Place the word
-        return WordSearch.placeWordAt(state, row, col, word, "diagonal");
+        return WordSearch.placeWordAt(state, row, col, word, reversed, "diagonal", direction);
     }
 
     static getBoardWithRandomLetters(state: WordSearchState): string[][] {
@@ -321,5 +356,16 @@ export abstract class WordSearch {
 
     static flattenPlacements(state: WordSearchState): WordPlacementCoords[] {
         return Object.values(state.wordPlacements).flat();
+    }
+
+    static checkLetterPlacement(letter: string, board: string[][], row: number, col: number) {
+        const cell = board[row][col];
+        if (cell === letter || cell === PLACEHOLDER) {
+            if (cell !== PLACEHOLDER) console.log(`Allowed: Cell: ${cell} (${col},${row}), Letter: ${letter}`);
+            return true;
+        }
+        console.log(`Cell: ${cell} (${col},${row}), Letter: ${letter} -> not allowed`);
+
+        return false;
     }
 }
