@@ -54,7 +54,14 @@ export abstract class WordSearch {
     static createGame(words?: string[], width?: number, height?: number): WordSearchState {
         const w = width || WIDTH;
         const h = height || HEIGHT;
-        const wordList = words || WordSearch.randomWordList(NUMBER_OF_WORDS);
+        const wordList = (words || WordSearch.randomWordList(NUMBER_OF_WORDS)).map((word) => {
+            // ensure all words will fit on the board
+            const length = word.replace(" ", "").length;
+            if (length < w) {
+                return word;
+            }
+            return word.slice(0, w - length - 1);
+        });
         const board = WordSearch.createEmptyBoard(w, h);
         const randomLetters = WordSearch.generateRandomLetters(w, h);
 
