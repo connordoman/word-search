@@ -5,15 +5,16 @@
 
 import { generate, count } from "random-words";
 import chalk from "chalk";
+import { DEVELOPMENT } from "@/lib/config";
 
 export const WIDTH = 12;
 export const HEIGHT = 12;
 export const NUMBER_OF_WORDS = 20;
 export const PLACEHOLDER = "_";
 export const DEFAULT_FILL_WITH_RANDOM_LETTERS = true;
-export const WORDSEARCH_DEBUG = false;
+export const WORDSEARCH_DEBUG = DEVELOPMENT || false;
 
-function debug(...args: any[]) {
+export function debug(...args: any[]) {
     if (WORDSEARCH_DEBUG) {
         console.log(...args);
     }
@@ -53,7 +54,14 @@ export abstract class WordSearch {
     static createGame(words?: string[], width?: number, height?: number): WordSearchState {
         const w = width || WIDTH;
         const h = height || HEIGHT;
-        const wordList = words || WordSearch.randomWordList(NUMBER_OF_WORDS);
+        const wordList = (words || WordSearch.randomWordList(NUMBER_OF_WORDS)).map((word) => {
+            // ensure all words will fit on the board
+            const length = word.replace(" ", "").length;
+            if (length < w) {
+                return word;
+            }
+            return word.slice(0, w - length - 1);
+        });
         const board = WordSearch.createEmptyBoard(w, h);
         const randomLetters = WordSearch.generateRandomLetters(w, h);
 

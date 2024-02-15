@@ -5,6 +5,7 @@
 
 import { WordSearchGame } from "@/components/2024/WordSearchGame";
 import { WordSearchGameProvider } from "@/components/2024/WordSearchGameProvider";
+import { debug } from "console";
 
 export default async function Home({
     params,
@@ -19,7 +20,7 @@ export default async function Home({
         words = [words];
     }
 
-    console.log("Custom words:", words);
+    debug("Custom words:", words);
 
     return (
         <main className="relative flex items-start justify-center">
