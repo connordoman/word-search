@@ -29,6 +29,10 @@ export const WordSearchBoard = ({
 }: WordSearchBoardProps) => {
     const [buttonLetters, setButtonLetters] = useState(letters);
 
+    useEffect(() => {
+        setButtonLetters(letters);
+    }, [letters]);
+
     const checkSelected = (row: number, col: number): boolean => {
         return currentGuess.some((coords) => coords.row === row && coords.col === col);
     };

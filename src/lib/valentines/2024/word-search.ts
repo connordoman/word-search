@@ -5,15 +5,16 @@
 
 import { generate, count } from "random-words";
 import chalk from "chalk";
+import { DEVELOPMENT } from "@/lib/config";
 
 export const WIDTH = 12;
 export const HEIGHT = 12;
 export const NUMBER_OF_WORDS = 20;
 export const PLACEHOLDER = "_";
 export const DEFAULT_FILL_WITH_RANDOM_LETTERS = true;
-export const WORDSEARCH_DEBUG = false;
+export const WORDSEARCH_DEBUG = DEVELOPMENT || false;
 
-function debug(...args: any[]) {
+export function debug(...args: any[]) {
     if (WORDSEARCH_DEBUG) {
         console.log(...args);
     }

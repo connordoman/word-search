@@ -13,21 +13,29 @@ import { WordSearchBoard } from "./WordSearchBoard";
 import { twMerge } from "tailwind-merge";
 import { WordSearchButton } from "./WordSearchButton";
 import { WordSearchLegend } from "./WordSearchLegend";
+import { WordSearchDialog } from "./WordSearchDialog";
+import { useRouter } from "next/navigation";
 
 interface WordSearchGameProps {
     words?: string[];
 }
 
 export const WordSearchGame = ({ words }: WordSearchGameProps) => {
+    const router = useRouter();
+
     const dispatch = useDispatch();
     const game = useSelector((state: RootState) => state.wordSearch.game);
 
     const [currentGuess, setCurrentGuess] = useState<WordSearchGuess>([]);
     const [correctWords, setCorrectWords] = useState<WordPlacementCoords[]>([]);
+    const [won, setWon] = useState(false);
 
     useEffect(() => {
         if (!game) {
             dispatch(setGame(WordSearch.createGame(words, 12, 12)));
+            setWon(false);
+            setCorrectWords([]);
+            setCurrentGuess([]);
         }
     }, [game, dispatch, words]);
 
@@ -43,6 +51,13 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
         }
     }, [game, currentGuess, dispatch, correctWords]);
 
+    useEffect(() => {
+        if (game && game.foundWords.length === game.words.length) {
+            setWon(true);
+            console.log("You won!");
+        }
+    }, [game]);
+
     const handleLetterClick = (row: number, col: number): void => {
         if (currentGuess.some((coords) => coords.row === row && coords.col === col)) {
             const newGuess = currentGuess.filter((coords) => coords.row !== row || coords.col !== col);
@@ -55,6 +70,14 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
 
     const clearGuess = (): void => {
         setCurrentGuess([]);
+    };
+
+    const handleRestart = () => {
+        dispatch(setGame(WordSearch.createGame(words, 12, 12)));
+        setWon(false);
+        setCorrectWords([]);
+        setCurrentGuess([]);
+        router.refresh();
     };
 
     if (!game) {
@@ -79,6 +102,7 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
             <WordSearchButton onClick={clearGuess} disabled={currentGuess.length === 0}>
                 Deselect
             </WordSearchButton>
+            <WordSearchDialog message={"You did it!"} buttonText="Restart" open={won} onClose={handleRestart} />
         </div>
     );
 };
