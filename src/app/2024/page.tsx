@@ -6,11 +6,25 @@
 import { WordSearchGame } from "@/components/2024/WordSearchGame";
 import { WordSearchGameProvider } from "@/components/2024/WordSearchGameProvider";
 
-export default async function Home() {
+export default async function Home({
+    params,
+    searchParams,
+}: {
+    params: { slug: string };
+    searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+    let words = searchParams?.words as string[] | undefined;
+
+    if (typeof words === "string") {
+        words = [words];
+    }
+
+    console.log("Custom words:", words);
+
     return (
         <main className="relative flex items-start justify-center">
             <WordSearchGameProvider>
-                <WordSearchGame />
+                <WordSearchGame words={words} />
             </WordSearchGameProvider>
         </main>
     );
