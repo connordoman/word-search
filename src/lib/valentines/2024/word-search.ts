@@ -50,24 +50,34 @@ function sortPlacementCoords(a: WordPlacementCoords, b: WordPlacementCoords): nu
     return a.row - b.row;
 }
 
+function shuffle(array: string[]): string[] {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 export abstract class WordSearch {
     static createGame(words?: string[], width?: number, height?: number): WordSearchState {
         const w = width || WIDTH;
         const h = height || HEIGHT;
-        const wordList = (words || WordSearch.randomWordList(NUMBER_OF_WORDS)).map((word) => {
-            // ensure all words will fit on the board
-            const length = word.replace(" ", "").length;
-            if (length < w) {
-                return word;
-            }
-            return word.slice(0, w - length - 1);
-        });
+        const wordList = (words || WordSearch.randomWordList(NUMBER_OF_WORDS))
+            .map((word) => {
+                // ensure all words will fit on the board
+                const length = word.replace(" ", "").length;
+                if (length < w) {
+                    return word;
+                }
+                return word.slice(0, w - length - 1);
+            })
+            .sort(() => Math.random() - 0.5);
         const board = WordSearch.createEmptyBoard(w, h);
         const randomLetters = WordSearch.generateRandomLetters(w, h);
 
         let game: WordSearchState = {
             board,
-            words: wordList,
+            words: shuffle(wordList),
             width: w,
             height: h,
             randomLetters,
