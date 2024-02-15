@@ -12,7 +12,7 @@ interface WordSearchLegendProps {
 
 export const WordSearchLegend = ({ words, foundWords }: WordSearchLegendProps) => {
     return (
-        <div className="md:absolute left-full flex flex-row md:flex-col gap-2 md:gap-2 flex-wrap justify-center p-4 leading-none">
+        <div className="md:absolute left-full flex flex-row md:flex-col gap-3 md:gap-2 flex-wrap justify-center p-4 leading-none w-max">
             {words.map((word, i) => {
                 const found = foundWords.includes(word);
                 return (

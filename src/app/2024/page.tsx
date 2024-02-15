@@ -13,7 +13,11 @@ export default async function Home({
     params: { slug: string };
     searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-    const words = searchParams?.words as string[] | undefined;
+    let words = searchParams?.words as string[] | undefined;
+
+    if (typeof words === "string") {
+        words = [words];
+    }
 
     console.log("Custom words:", words);
 

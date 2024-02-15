@@ -120,12 +120,14 @@ export abstract class WordSearch {
     ): WordSearchState {
         const { board, wordPlacements } = state;
 
+        const letters = this.getLettersToCheck(word, reversed);
+
         wordPlacements[word] = wordPlacements[word] || [];
 
         // Random chance to reverse the word
         const wordCandidate = reversed ? word.split("").reverse().join("") : word;
 
-        for (let i = 0; i < wordCandidate.length; i++) {
+        for (let i = 0; i < letters.length; i++) {
             let r = row;
             let c = col;
             if (direction === "horizontal") c = col + i;
@@ -139,7 +141,7 @@ export abstract class WordSearch {
             }
 
             wordPlacements[word].push({ row: r, col: c });
-            board[r][c] = wordCandidate[i];
+            board[r][c] = letters[i];
         }
 
         wordPlacements[word] = wordPlacements[word].sort(sortPlacementCoords);
@@ -195,11 +197,18 @@ export abstract class WordSearch {
         return newState;
     }
 
+    static getLettersToCheck(word: string, reversed: boolean): string[] {
+        const letters = word.split("").filter((letter) => letter !== " ");
+
+        if (reversed) return letters.reverse();
+        return letters;
+    }
+
     static placeWordHorizontally(state: WordSearchState, word: string, reversed: boolean): WordPlacementAttempt {
         const { width, height, board, wordPlacements } = state;
 
         // preempt the word placement with a check for overlap
-        const lettersToCheck = reversed ? word.split("").reverse() : word.split("");
+        const lettersToCheck = this.getLettersToCheck(word, reversed);
 
         const row = Math.floor(Math.random() * height);
         const col = Math.floor(Math.random() * (width - word.length));
@@ -221,7 +230,7 @@ export abstract class WordSearch {
         const { width, height, board, wordPlacements } = state;
 
         // preempt the word placement with a check for overlap
-        const lettersToCheck = reversed ? word.split("").reverse() : word.split("");
+        const lettersToCheck = this.getLettersToCheck(word, reversed);
 
         const row = Math.floor(Math.random() * (height - word.length));
         const col = Math.floor(Math.random() * width);
@@ -246,7 +255,7 @@ export abstract class WordSearch {
         const { width, height, board, wordPlacements } = state;
 
         // preempt the word placement with a check for overlap
-        const lettersToCheck = reversed ? word.split("").reverse() : word.split("");
+        const lettersToCheck = this.getLettersToCheck(word, reversed);
 
         // diagonal direction
         const direction = Math.random() > 0.5 ? 1 : 0; // 0 for down, 1 for up
