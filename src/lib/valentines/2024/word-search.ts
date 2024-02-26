@@ -134,7 +134,7 @@ export abstract class WordSearch {
         word: string,
         reversed: boolean,
         direction: "horizontal" | "vertical" | "diagonal",
-        diagonalDirection: 0 | 1 = 0
+        diagonalDirection: 0 | 1 = 0,
     ): WordSearchState {
         const { board, wordPlacements } = state;
 
@@ -310,7 +310,7 @@ export abstract class WordSearch {
 
     static getBoardWithRandomLetters(state: WordSearchState): string[][] {
         return state.board.map((row, r) =>
-            row.map((cell, c) => (cell === "_" ? state.randomLetters[r][c] : cell.toUpperCase()))
+            row.map((cell, c) => (cell === "_" ? state.randomLetters[r][c] : cell.toUpperCase())),
         );
     }
 
@@ -339,7 +339,7 @@ export abstract class WordSearch {
         showWordList = true,
         fillWithRandomLetters = true,
         colorize = true,
-        highlightWords = true
+        highlightWords = true,
     ) {
         let printableBoard: string[][] = [];
 
@@ -379,7 +379,7 @@ export abstract class WordSearch {
     static generateRandomLetters(width: number, height: number): string[][] {
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         return Array.from({ length: height }).map((_) =>
-            Array.from({ length: width }).map((_) => alphabet[Math.floor(Math.random() * alphabet.length)])
+            Array.from({ length: width }).map((_) => alphabet[Math.floor(Math.random() * alphabet.length)]),
         );
     }
 
