@@ -4,7 +4,7 @@
  */
 
 export function searchParamsToQueryString(
-    searchParams: { [key: string]: string | string[] | undefined } | undefined
+    searchParams: { [key: string]: string | string[] | undefined } | undefined,
 ): string {
     if (searchParams) {
         let params = new URLSearchParams();

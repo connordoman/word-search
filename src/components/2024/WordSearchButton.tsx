@@ -18,10 +18,11 @@ export const WordSearchButton = ({ children, className, disabled, onClick }: Wor
             className={twMerge(
                 "cursor-pointer transition-all duration-200 py-2 px-4 rounded-full bg-word-light-grey dark:bg-word-dark-grey text-word-dark-grey dark:text-word-light-grey",
                 disabled ? "filter brightness-50 cursor-not-allowed" : "",
-                className
+                className,
             )}
             onClick={onClick}
-            disabled={disabled}>
+            disabled={disabled}
+        >
             {children}
         </button>
     );

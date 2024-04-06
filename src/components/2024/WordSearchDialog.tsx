@@ -32,8 +32,9 @@ export const WordSearchDialog = ({ open, message, buttonText, onClose }: WordSea
         <div
             className={twMerge(
                 "w-screen h-screen fixed top-0 left-0 z-10 transition-opacity duration-200 bg-word-dark/75 flex items-center",
-                isOpen ? "opacity-100 pointer-events-auto animate-pop-in" : "opacity-0 pointer-events-none"
-            )}>
+                isOpen ? "opacity-100 pointer-events-auto animate-pop-in" : "opacity-0 pointer-events-none",
+            )}
+        >
             <div className="text-white bg-word-dark w-screen py-8 shadow-md flex flex-col items-center justify-center gap-4">
                 <p className="text-3xl">{message}</p>
 
