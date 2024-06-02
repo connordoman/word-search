@@ -87,21 +87,27 @@ export const WordSearchGame = ({ words }: WordSearchGameProps) => {
     return (
         <div className="text-word-dark-grey dark:text-word-light-grey relative flex flex-col items-center justify-between gap-6 w-fit-square pt-6 pb-8">
             <h1 className="text-4xl leading-none">Word Search</h1>
-            <div className="relative flex flex-col md:flex-row items-center justify-center md:items-center md:justify-between">
-                <WordSearchBoard
-                    w={game.width}
-                    h={game.height}
-                    letters={WordSearch.flattenBoard(game)}
-                    currentGuess={currentGuess}
-                    correctGuesses={correctWords}
-                    answers={WordSearch.flattenPlacements(game)}
-                    onClickLetter={handleLetterClick}
-                />
+            <div className="relative flex flex-col md:flex-row items-center justify-center md:items-start md:justify-between">
+                <div className="flex flex-col gap-4">
+                    <WordSearchBoard
+                        w={game.width}
+                        h={game.height}
+                        letters={WordSearch.flattenBoard(game)}
+                        currentGuess={currentGuess}
+                        correctGuesses={correctWords}
+                        answers={WordSearch.flattenPlacements(game)}
+                        onClickLetter={handleLetterClick}
+                    />
+                    <WordSearchButton
+                        className="mx-auto max-w-24"
+                        onClick={clearGuess}
+                        disabled={currentGuess.length === 0}
+                    >
+                        Deselect
+                    </WordSearchButton>
+                </div>
                 <WordSearchLegend words={game.words} foundWords={game.foundWords} />
             </div>
-            <WordSearchButton onClick={clearGuess} disabled={currentGuess.length === 0}>
-                Deselect
-            </WordSearchButton>
             <WordSearchDialog message={"You did it!"} buttonText="Restart" open={won} onClose={handleRestart} />
         </div>
     );

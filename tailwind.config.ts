@@ -10,6 +10,7 @@ const config: Config = {
         extend: {
             spacing: {
                 "fit-square": "min(calc(100vw - 2rem), calc(100vh - 2rem))",
+                "default-margin": "calc((100vh - 1024px) / 2)",
             },
             backgroundImage: {
                 "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

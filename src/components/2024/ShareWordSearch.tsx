@@ -26,7 +26,8 @@ export const ShareWordSearch = () => {
     }, [words]);
 
     useEffect(() => {
-        setGeneratedUrl(SITE_URL + "/" + stringArrayToQueryString("words", wordList));
+        const currentUrl = new URL(window.location.href);
+        setGeneratedUrl(currentUrl.origin + "/" + stringArrayToQueryString("words", wordList));
     }, [wordList]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
